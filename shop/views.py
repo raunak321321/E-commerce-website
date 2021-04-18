@@ -35,5 +35,5 @@ def search(request):
     return HttpResponse("We are at search")
 def ProdView(request):
     return HttpResponse("We are at product view")
-def checkout(request):
+def checkout(request): 
     return HttpResponse("We are at checkout")
