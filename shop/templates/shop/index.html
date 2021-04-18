@@ -1,0 +1,133 @@
+{% extends 'shop/basics.html' %}
+
+
+  {% block title %}Mall.in{% endblock %}
+  
+  {% block css %}
+  body{
+    <!-- background-color: blue;  -->
+  }
+    
+img{
+  width:150px;
+  height:150px;
+  <!-- justify-content: center; -->
+}
+
+    .image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+   
+.card{
+  margin: 5px 0px;
+  justify-content:center;
+  align-items: center;
+  width:300px;
+  height:350px;
+
+}
+.center{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+.para{
+  margin: 10px;
+  padding: 16px;
+  text-align: center;
+}
+h4{
+  text-align: center;
+  margin: 2px;
+  padding: 2px;
+}
+body .carousel-control-prev-icon,
+body .carousel-control-next-icon{
+background-color: blue;
+}
+.carousel-control-prev,
+          .carousel-control-next{
+          top: auto;
+bottom: auto;
+          }
+          .active{
+            color:green;
+          }
+          .carousel-indicators [data-bs-target]{
+            background-color:red;
+          }
+         
+
+    
+{% endblock %}
+{% block body %}
+  {% load static %}
+  <div class="container">
+    {% for product, range , n_slides in allProds %}
+    
+<div class="center">
+
+  <h5 class="my-4">Flash Sale On {{product.0.category}} - Recommended Items</h5>
+</div>
+   
+
+    <div id="carouselExampleCaptions{{forloop.counter}}" class="carousel slide" data-bs-ride="carousel">
+      <div class="carousel-indicators">
+        <button type="button" data-bs-target="#carouselExampleCaptions{{forloop.counter}}" data-bs-slide-to="0" class="active"
+        aria-current="true" aria-label="Slide 1"></button>
+        {% for i in range %}
+        <button type="button" data-bs-target="#carouselExampleCaptions{{forloop.parentloop.counter}}" data-bs-slide-to="{{i}}"
+        aria-label='Slide {{i|add:1}}'></button>
+        {% endfor %}
+      </div>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          
+          <div class="image-container">
+            <div class="card">
+              <img src="/media/{{product.0.image}}" class="d-block" alt="">
+              <h4 class="center">{{product.0.product_name}}</h4>
+              <p class="para">{{product.0.desc}}</p>
+                    <a href="#" class="btn btn-primary">Add to cart</a>
+            </div>
+            {% for i in product|slice:"1:"%}
+            <!-- ye one se lek pura end tk jayega -->
+            <div class="card">
+              <img src="/media/{{i.image}}" class="d-block" alt="">
+              <h4 class="center">{{i.product_name}}</h4>
+              <p class="para">{{i.desc}}</p>
+                    <a href="#" class="btn btn-primary">Add to cart</a>
+            </div>
+            {% if forloop.counter|add:1|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
+          </div></div><div class="carousel-item"><div class="image-container">
+          <!-- this second is closed for active one -->
+            {% endif %}
+            {% endfor %}
+      </div> 
+      </div> 
+      </div> 
+      </div> 
+       
+      <button class="carousel-control-prev " type="button" data-bs-target="#carouselExampleCaptions{{forloop.counter}}"
+        data-bs-slide="prev">
+        <span class="carousel-control-prev-icon " aria-hidden="true"></span>
+        <span class="visually-hidden ">Previous</span>
+      </button>
+      <button class="carousel-control-next " type="button" data-bs-target="#carouselExampleCaptions{{forloop.counter}}"
+        data-bs-slide="next">
+        <span class="carousel-control-next-icon " aria-hidden="true"></span>
+        <span class="visually-hidden ">Next</span>
+      </button>
+    
+    </div>
+    {% endfor %}
+</div>
+  
+  {% endblock %}
+  
+</body>
+
+</html>
