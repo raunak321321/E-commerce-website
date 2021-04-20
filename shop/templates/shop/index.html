@@ -5,16 +5,31 @@
   
   {% block css %}
   body{
-    <!-- background-color: blue;  -->
+    z-index:-1;
   }
-    
+  #navbar{
+    display: flex;
+    align-items: center;
+     /* position: relative; */
+    width: 100%;
+     position: fixed;
+     opacity:1;
+     z-index:1;
+
+}
+#navbar ul{
+  z-index: 1;
+  font-family: 'Playball', cursive;
+  display: flex;
+}
 img{
-  width:150px;
+  z-index: 0;
+  max-width:150px;
   height:150px;
-  <!-- justify-content: center; -->
 }
 
     .image-container {
+      z-index: 0;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -22,42 +37,50 @@ img{
 
    
 .card{
+  z-index: 0;
+  
   margin: 5px 0px;
   justify-content:center;
   align-items: center;
   width:300px;
   height:350px;
-
+ 
 }
+
 .center{
+  
+  
   display:flex;
   justify-content:center;
   align-items:center;
 }
 .para{
+  z-index: 0;
   margin: 10px;
   padding: 16px;
   text-align: center;
 }
 h4{
+  z-index: 0;
   text-align: center;
   margin: 2px;
   padding: 2px;
 }
 body .carousel-control-prev-icon,
 body .carousel-control-next-icon{
+  z-index: 0;
 background-color: blue;
 }
 .carousel-control-prev,
           .carousel-control-next{
+            z-index: 0;
           top: auto;
 bottom: auto;
           }
-          .active{
-            color:green;
-          }
+         
           .carousel-indicators [data-bs-target]{
-            background-color:red;
+            z-index: 0;
+            background-color:green;
           }
          
 
@@ -91,7 +114,7 @@ bottom: auto;
               <img src="/media/{{product.0.image}}" class="d-block" alt="">
               <h4 class="center">{{product.0.product_name}}</h4>
               <p class="para">{{product.0.desc}}</p>
-                    <a href="#" class="btn btn-primary">Add to cart</a>
+                    <button id="pr{{product.0.id}}" class="btn btn-primary cart">Add to cart</button>
             </div>
             {% for i in product|slice:"1:"%}
             <!-- ye one se lek pura end tk jayega -->
@@ -99,7 +122,7 @@ bottom: auto;
               <img src="/media/{{i.image}}" class="d-block" alt="">
               <h4 class="center">{{i.product_name}}</h4>
               <p class="para">{{i.desc}}</p>
-                    <a href="#" class="btn btn-primary">Add to cart</a>
+              <button id="pr{{i.id}}" class="btn btn-primary cart">Add to cart</button>
             </div>
             {% if forloop.counter|add:1|divisibleby:4 and forloop.counter > 0 and not forloop.last %}
           </div></div><div class="carousel-item"><div class="image-container">
@@ -125,7 +148,57 @@ bottom: auto;
     </div>
     {% endfor %}
 </div>
-  
+{% endblock %}
+ 
+  {% block js %}
+  <script>
+    update();
+   console.log('working')
+
+  //  for making cart
+if(localStorage.getItem('cart') == null)
+{
+var cart={};
+}
+else{
+cart= JSON.parse(localStorage.getItem('cart'));
+}
+//jQuery starts here//
+$('.cart').click(function(){
+
+// console.log('clicked');
+var idstr = this.id.toString();
+if(cart[idstr]!=undefined){
+  cart[idstr]=cart[idstr]+1;
+}
+else{
+  cart[idstr]=1;
+}
+console.log(cart);
+localStorage.setItem('cart', JSON.stringify(cart)); 
+update();
+// here we update our system means when it reloads all our carts get not rid off
+});
+function update(){
+cart_number = document.getElementById('cart_number');
+if(localStorage.getItem('cart') != null){
+  cartstr = localStorage.getItem('cart')
+                cart = JSON.parse(cartstr)
+  var number  = 0 ;
+  for (let k in cart) {
+    // console.log(k + ' is ' + fruits[k])
+    number = number + cart[k];
+}
+cart_number.innerHTML = `cart(${number})`;
+}
+else{
+  cart_number.innerHTML = "cart(0)";
+}}
+
+
+// localStorage.clear();
+// localStorage.removeItem
+  </script>
   {% endblock %}
   
 </body>
