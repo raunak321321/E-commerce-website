@@ -10,6 +10,6 @@ urlpatterns = [
     path('contact/', views.contact,name="ContactUs"),
     path('tracker/', views.tracker,name="TrackingStatus"),
     path('search/', views.search,name="Search"),
-    path('productview/', views.ProdView,name="ProductView"),
-    path('checkout/', views.checkout,name="Checkout")
+    path('products/<int:myid>', views.ProductView,name="ProductView"),#Here we are giving arguments to function which we are calling 
+    path('checkout/', views.checkout,name="Checkout") 
 ]

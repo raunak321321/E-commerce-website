@@ -13,3 +13,15 @@ class Product(models.Model):
 
     def __str__(self):
         return self.product_name  # search on google isse us product ka naam dikhega admin m wrna object1 and object 2 like that dikha raha tha
+
+
+class Contact(models.Model):
+    msg_id = models.AutoField(primary_key=True)
+    name = models.CharField(max_length=40)
+    email = models.CharField(max_length=50,default="")
+    phone = models.CharField(max_length=50,default="")
+    desc = models.CharField(max_length=500,default="")
+    
+    def __str__(self):
+        return self.name  # search on google isse us product ka naam dikhega admin m wrna object1 and object 2 like that dikha raha tha
+# after this add to migrations via some command you know and then register this model in admin.py

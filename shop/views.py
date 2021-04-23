@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from .models import Product
+from .models import Product , Contact
 from math import ceil
 # Create your views here.
 def index(request):
@@ -28,12 +28,23 @@ def index(request):
 def about(request):
     return render(request,'shop/about.html')
 def contact(request):
-    return HttpResponse("We are at contact")
+    if request.method=="POST":
+        name = request.POST.get('name','')
+        email = request.POST.get('email','')
+        phone = request.POST.get('phone','')
+        desc = request.POST.get('desc','')
+        contact = Contact(name=name,email=email,phone=phone,desc=desc)
+        # where first name is which is in models and second one is in our if statements
+        contact.save()
+    return render(request,'shop/contact.html')
 def tracker(request):
-    return HttpResponse("We are at tracker")
+    return render(request,'shop/tracker.html')
 def search(request):
-    return HttpResponse("We are at search")
-def ProdView(request):
-    return HttpResponse("We are at product view")
+    return render(request,'shop/search.html')
+def ProductView(request,myid):
+    # we are fetching id here
+    product = Product.objects.filter(id=myid) 
+    # here product is a list
+    return render(request,'shop/prodview.html',{"product":product[0]})#here we write 0 because we want fetch the product in the list and as there is only one in the list so we can fetch it via 0.
 def checkout(request): 
-    return HttpResponse("We are at checkout")
+    return render(request,'shop/checkout.html')

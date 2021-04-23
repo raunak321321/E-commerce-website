@@ -15,32 +15,68 @@
   <title>{% block title %}{% endblock %}</title>
 
   <style>
-    {% block css %}{% endblock %}
+    #navbar{
+    align-items: center;
+    width: 100%;
+    height:50px;
+     opacity:0.7;
+     z-index:1;
+     position:fixed;
+    }
+     #navbar ul{
+  z-index: 1;
+  font-family: 'Playball', cursive;
+  display: flex;
+  
+}
+
+
+    #cart_number{
+      padding: 6px;
+      border-radius: 5px;
+      margin: 15px 0px 15px 15px;
+
+    }
+    #admin{
+      margin: 5px;
+      position: relative;
+    } 
+    .nav-item{
+      margin: 6px;
+    }
+    
+
 </style>
+{% block css %}{% endblock %}
 
 </head>
 
 <body>
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="navbar">
     <div class="container-fluid">
-      <a class="navbar-brand" href="#">E-MALL.in</a>
+      <a class="navbar-brand" href="/shop">E-MALL.in</a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
           <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="#">Home</a>
+            <a class="nav-link" aria-current="page" href="/shop">Home</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">About Us</a>
+            <a class="nav-link" href="/shop/about">About Us</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#">Contact Us</a>
+            <a class="nav-link" href="/shop/contact">Contact Us</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="#" id="cart_number">cart(0)</a>
+            <a class="nav-link" href="/shop/tracker">Tracker</a>
           </li>
+          <a href="/shop/admin" class="btn btn-sm btn-secondary nav-link" id="admin" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="Vivamus
+          sagittis lacus vel augue laoreet rutrum faucibus.">
+          Admin
+        </a>
+          
           <!-- <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
               Dropdown
@@ -59,7 +95,13 @@
         <form class="d-flex">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
           <button class="btn btn-outline-success" type="submit">Search</button>
+          
         </form>
+        <button type="button" class="btn btn-secondary" id="cart_number" data-container="body" data-toggle="popover" data-placement="bottom" data-html="true" data-content="Vivamus
+sagittis lacus vel augue laoreet rutrum faucibus.">
+Cart(0)
+</button>
+
       </div>
     </div>
   </nav>
@@ -80,6 +122,49 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"></script>
+    <script>
+      // **************important******************
+      // This all below script is for activation and comment read and see it clearly
+      $('#cart_number').popover();
+      document.getElementById('cart_number').setAttribute('data-content','<h6><strong>Cart</strong> for your items is in <strong>Shopping Cart</strong></h6>');
+      $('#admin').popover();
+      document.getElementById('admin').setAttribute('data-content','<h6>Only for <strong>BUSSINESS</strong></h6>');
+      
+if(localStorage.getItem('cart') == null)
+{
+var cart={};
+}
+else
+{
+cart= JSON.parse(localStorage.getItem('cart'));
+}
+    
+      update();
+
+function update()
+{
+  cart_number = document.getElementById('cart_number');
+  if(localStorage.getItem('cart') != null)
+  {
+    cartstr = localStorage.getItem('cart')
+    cart = JSON.parse(cartstr)
+    var number  = 0 ;
+    
+    for (let k in cart) 
+    {
+      // console.log(k + ' is ' + fruits[k])
+      number = number + cart[k];
+    }
+      cart_number.innerHTML = `Cart(${number})`;
+  }
+  else
+  {
+    cart_number.innerHTML = "Cart(0)";
+  }
+  // update2()
+}
+
+    </script>
     {% block js %} {% endblock %}
 
 </body> 
