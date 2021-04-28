@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from .models import Product , Contact
-from math import ceil
+from math import ceil  
 # Create your views here.
 def index(request):
     # products  = Product.objects.all()

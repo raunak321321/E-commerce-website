@@ -91,11 +91,11 @@ function update4()
         var idstr = this.id.toString();
         if (cart[idstr] != undefined) 
         {
-            cart[idstr] = cart[idstr] + 1;
+            cart[idstr][0] = cart[idstr][0] + 1;
         }
         else 
         {
-            cart[idstr] = 1;
+            cart[idstr][0] = 1;
         }
         localStorage.setItem('cart', JSON.stringify(cart));
         update();
@@ -108,7 +108,7 @@ function update4()
       var idsubstr = this.id.slice(2,);
       if (cart[idsubstr] != undefined) 
       {
-        cart[idsubstr] = cart[idsubstr] - 1;
+        cart[idsubstr][0] = cart[idsubstr][0] - 1;
         // console.log(idsubstr)
       }
 
@@ -120,18 +120,20 @@ function update4()
     });
 function update3()
     {
-        localStorage.setItem('cart', JSON.stringify(cart));
+        // localStorage.setItem('cart', JSON.stringify(cart));
     if (localStorage.getItem('cart') != null) 
+
       {
+        cart = JSON.parse(localStorage.getItem('cart'))
           id = document.getElementById('invisible').innerHTML;
         
         
-          document.getElementById('qrpr'+id).innerHTML = `<button type="button" class="btn btn-success cart width" id=${'pr'+id}>+</button><span class="mx-2 width">${cart['pr'+id]}</span><button type="button" class="btn btn-danger sub_cart width" id =${'sbpr'+id}>-</button>`
+          document.getElementById('qrpr'+id).innerHTML = `<button type="button" class="btn btn-success cart width" id=${'pr'+id}>+</button><span class="mx-2 width">${cart['pr'+id][0]}</span><button type="button" class="btn btn-danger sub_cart width" id =${'sbpr'+id}>-</button>`
           //  The below if line is for let say when we decrease our particular id cart to such a number such that now it becomes 0 so instead of seeing it as it is very nice if our website then again shows add to cart button
-          if (cart['pr'+id] <= 0 || cart['pr'+id] == undefined ) 
+          if (cart['pr'+id][0] <= 0 || cart['pr'+id][0] == undefined ) 
           {
             document.getElementById('qrpr'+id).innerHTML = ` <a id=${'pr'+id} class="btn btn-primary cart width">Add to cart</a>`
-            delete cart['pr'+id];
+            delete cart['pr'+id][0];
             localStorage.setItem('cart', JSON.stringify(cart));
 
           }

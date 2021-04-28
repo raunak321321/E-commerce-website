@@ -90,6 +90,17 @@
     display: inline-block;
 
   }
+
+  .invisible {
+    display: none;
+  }
+  .center{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+   
+    align-items: center;
+  }
 </style>
 
 {% endblock %}
@@ -122,6 +133,7 @@
               <img src="/media/{{product.0.image}}" class="d-block" alt="">
               <h6 class="center title" id="namepr{{product.0.id}}">{{product.0.product_name|slice:"0:15"}}...</h6>
               <p class="para">{{product.0.desc|slice:"0:56"}}...</p>
+              <p class="my-4 mx-5 invisible">{{product.0.id}}</p>
               <div class="cart_button">
                 <div id="qrpr{{product.0.id}}" class="button_cart">
 
@@ -137,6 +149,7 @@
               <img src="/media/{{i.image}}" class="d-block" alt="">
               <h6 class="center title" id="namepr{{i.id}}">{{i.product_name|slice:"0:15"}}...</h6>
               <p class="para">{{i.desc|slice:"0:56"}}...</p>
+              <p class="my-4 mx-5 invisible">{{i.id}}</p>
               <div class="cart_button">
                 <div id="qrpr{{i.id}}" class="button_cart">
 
@@ -177,7 +190,6 @@
 </div>
 {% endfor %}
 {% endblock %}
-
 {% block js %}
 <script>
   // popovercart();
@@ -191,87 +203,140 @@
   //     i=i+1;
   //   }
   // }
+
+  
+  
+update2()
+  //jQuery starts here//
+  function update2(){
+
+    update1()
+  $('.cart').click(function () {
+    // console.log('clcked')
+
+    var idstr = this.id.toString();
+    if (cart[idstr] != undefined) 
+    {
+      qty = cart[idstr][0] + 1;
+      name = document.getElementById('name'+idstr).innerHTML
+      cart[idstr] = [qty,name]
+      localStorage.setItem('cart', JSON.stringify(cart));
+      // popovercart()
+
+    }
+    else {
+      qty = 1;
+      name = document.getElementById('name'+ idstr).innerHTML
+      cart[idstr] = [qty,name]
+      localStorage.setItem('cart', JSON.stringify(cart));
+      // popovercart()
+
+    }
+
+    update1()
+    popovercart()
+    update();
+
+
+    // here we update our system means when it reloads all our carts get not rid off
+  });
+    $('.button_cart').on("click", "button.cart", function() {
+    // console.log('clcked')
+
+    var idstr = this.id.toString();
+    if (cart[idstr] != undefined) 
+    {
+      qty = cart[idstr][0] + 1;
+      name = document.getElementById('name'+idstr).innerHTML
+      cart[idstr] = [qty,name]  //no use of this as it is already defined
+      localStorage.setItem('cart', JSON.stringify(cart));
+      // popovercart()
+
+    }
+    else {
+      qty = 1;
+      name = document.getElementById('name'+ idstr).innerHTML
+      cart[idstr] = [qty,name]
+      localStorage.setItem('cart', JSON.stringify(cart));
+      // popovercart()
+
+    }
+
+    update1()
+    popovercart()
+    update();
+    // here we update our system means when it reloads all our carts get not rid off
+  });
+  
+  
+  // $('.sub_cart').click(function () {
+    $('.button_cart').on("click", "button.sub_cart", function() {
+    var idsubstr = this.id.slice(2,);
+    if (cart[idsubstr] != undefined) 
+    {
+      qty = cart[idsubstr][0] - 1;
+      name = document.getElementById('name'+idsubstr).innerHTML
+      cart[idsubstr]= [qty,name]
+
+    }
+    localStorage.setItem('cart', JSON.stringify(cart));
+    // popovercart()
+    update1()
+    popovercart()
+    update();
+    
+    // here we update our system means when it reloads all our carts get not rid off
+  });
   popovercart()
+  $('#cart_number').popover();
   function popovercart() 
   {
-    popstr = `<h6><strong>Items</strong> in your <strong>Shopping Cart: </strong></h6><br>`
+    popstr = `<div class="center"><div><h6><strong>Items</strong> in your <strong>Shopping Cart: </strong></h6></div>`
     i = 1;
-    for (var item in cart) 
+    if (localStorage.getItem('cart') != null) 
     {
-      $('#cart_number').popover();
-      popstr = popstr + `${i}. <strong>${document.getElementById('name'+item).innerHTML} </strong>--> <b>Qtys</b>: ${cart[item]}<br>` ;
-      i=i+1;
+      for (var item in cart) 
+      {
+
+
+        popstr = popstr + `<div>${i}. <strong>${document.getElementById('name' + item).innerHTML} </strong>--> <b>Qtys</b>: ${cart[item][0]}</div>`;
+        i = i + 1;
+
+      }
     }
-    document.getElementById('cart_number').setAttribute('data-content',popstr);
-    $('#cart_number').popover('show');
+    popstr = popstr + " <div><a href='/shop/checkout'><button class='btn btn-sm btn-primary center' id ='checkout'>Checkout</button></a></div></div>"
+    document.getElementById('cart_number').setAttribute('data-content', popstr);
+    $('#cart_number').popover();
 
   }
-  update2()
-  function update2() {
-    update1();
+  
+  function update1() {
+    if (localStorage.getItem('cart') != null) {
+      cart = JSON.parse(localStorage.getItem('cart'))
+      for (let item in cart) {
+        document.getElementById("qr" + item).innerHTML = `<button type="button" class="btn btn-sm btn-success cart" id=${item}>+</button><span class="mx-2">${cart[item][0]}</span><button type="button" class="btn btn-sm btn-danger sub_cart" id =${'sb' + item}>-</button>`
+        //  The below if line is for let say when we decrease our particular id cart to such a number such that now it becomes 0 so instead of seeing it as it is very nice if our website then again shows add to cart button
 
-    //jQuery starts here//
-    $('.cart').click(function () 
-    {
-
-      var idstr = this.id.toString();
-      if (cart[idstr] != undefined) 
-      {
-        cart[idstr] = cart[idstr] + 1;
-        popovercart();
-      }
-      else 
-      {
-        cart[idstr] = 1;
-        popovercart();
-      }
-      localStorage.setItem('cart', JSON.stringify(cart));
-      update();
-      popovercart();
-       update2();
-      // here we update our system means when it reloads all our carts get not rid off
-    });
-    $('.sub_cart').click(function () 
-    {
-
-      var idsubstr = this.id.slice(2,);
-      if (cart[idsubstr] != undefined) 
-      {
-        cart[idsubstr] = cart[idsubstr] - 1;
-        // console.log(idsubstr)
-      }
-
-      localStorage.setItem('cart', JSON.stringify(cart));
-      update();
-      popovercart();
-      update2();
-
-      // here we update our system means when it reloads all our carts get not rid off
-    });
-    function update1() 
-    {
-      if (localStorage.getItem('cart') != null) 
-      {
-        for (let item in cart) 
-        {
-          document.getElementById("qr" + item).innerHTML = `<button type="button" class="btn btn-sm btn-success cart" id=${item}>+</button><span class="mx-2">${cart[item]}</span><button type="button" class="btn btn-sm btn-danger sub_cart" id =${'sb' + item}>-</button>`
-          //  The below if line is for let say when we decrease our particular id cart to such a number such that now it becomes 0 so instead of seeing it as it is very nice if our website then again shows add to cart button
-          if (cart[item] <= 0 || cart[item] == undefined ) {
-            document.getElementById("qr" + item).innerHTML = ` <a id=${item} class="btn btn-sm btn-primary cart">Add to cart</a>`
-            delete cart[item];
+        if (cart[item][0] <= 0 || cart[item][0] == undefined) {
+          document.getElementById("qr" + item).innerHTML = ` <a id=${item} class="btn btn-sm btn-primary cart">Add to cart</a>`
+          if (cart[item][0] <= 0) 
+          {
+            delete cart[item]
             localStorage.setItem('cart', JSON.stringify(cart));
-
           }
+          
         }
+
+
       }
-      popovercart();
     }
   }
+}
+
 // localStorage.clear();
 // localStorage.removeItem
 </script>
 {% endblock %}
-
 </body>
 
 </html>
